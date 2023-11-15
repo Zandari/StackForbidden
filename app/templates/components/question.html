@@ -31,8 +31,8 @@
                 {% endif %}
                 </span>
                 <div class="d-flex ms-lg-auto mt-lg-0 mt-2 align-self-center ms-n8px">
-                    {% for tag in question.tags.all %}
-                    <a class="c-tag ms-8px text-decoration-none" href="{% url 'app-feed-by-tag' tag.name %}">{{ tag.name }}</a>
+                    {% for tag_name in question.tags %}
+                    <a class="c-tag ms-8px text-decoration-none" href="{% url 'app-feed-by-tag' tag_name %}">{{ tag_name }}</a>
                     {% endfor %}
                 </div>
             </div>

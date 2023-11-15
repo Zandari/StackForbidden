@@ -1,10 +1,9 @@
 from django.urls import path
 from . import views
-from .  import views2
 
 
 urlpatterns = [
-    path("", views2.questions_feed_new, name='app-feed-new'),
+    path("", views.questions_feed_new, name='app-feed-new'),
     path("hot/", views.questions_feed_hot, name='app-feed-hot'),
     path("signup/", views.registration, name='app-signup'),
     path("login/", views.authorization, name='app-login'),
