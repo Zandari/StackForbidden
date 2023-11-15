@@ -1,12 +1,12 @@
 <div class="row bg-primary mt-4 pt-4 pb-4 c-rounded-10px">
   <span class="fw-semibold c-font-size-24 ms-4 p-0">Best members</span>
-  {% for user in best_members %}
+  {% for profile in best_members %}
     <div class="d-flex flex-wrap align-content-center mt-12px ms-4 pe-4 p-0">
       <img src="https://loremflickr.com/30/30" alt="avatar" class="rounded pt-3px pb-3px">
-      {# <img src="{{ user.avatar_url }}" alt="avatar" class="rounded pt-3px pb-3px"> #}
+      {# <img src="{{ profile.avatar.url }}" alt="avatar" class="rounded pt-3px pb-3px"> #}
       <div class="d-flex flex-column ms-4">
-        <span class="c-text-second fw-semibold c-font-size-14 flex-grow-1">{{ user.username }}</span>
-        <span class="c-text-muted fw-regular c-font-size-12">{{ user.answers }} answers</span>
+        <span class="c-text-second fw-semibold c-font-size-14 flex-grow-1">{{ profile.user.username }}</span>
+        <span class="c-text-muted fw-regular c-font-size-12">{{ profile.answers_count }} answers</span>
       </div>
     </div>
   {% endfor %}

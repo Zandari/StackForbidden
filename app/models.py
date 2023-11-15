@@ -8,14 +8,11 @@ class QuestionManager(models.Manager):
     def get_hot(self):
         return (self
                 .all()
-                .annotate(votes_num=models.Count('vote'))
+                .annotate(votes_num=models.Count('votes'))
                 .order_by('-votes_num'))
 
-
     def get_new(self):
-        return (self
-                .all()
-                .order_by('created_at'))
+        return self.all().order_by('-created_at')
 
 
 class TagManager(models.Manager):
@@ -30,7 +27,7 @@ class ProfileManager(models.Manager):
     def get_best(self):
         return (self
                 .all()
-                .annotate(activity=models.Count('question')+models.Count('answer'))
+                .annotate(activity=models.Count('questions')+models.Count('answers'))
                 .order_by('-activity'))
 
 
@@ -39,6 +36,11 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to="uploads", default="placeholder.png")
+
+    @property
+    def answers_count(self) -> int:
+        return len(self.answers.all())
+
 
 
 class Tag(models.Model):
@@ -50,18 +52,34 @@ class Tag(models.Model):
 class Question(models.Model):
     objects = QuestionManager()
 
-    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name="questions")
     title = models.CharField(max_length=255)
     text = models.TextField()
     tags = models.ManyToManyField(Tag, related_name="questions")
     created_at = models.DateTimeField()
 
+    @property
+    def votes_count(self) -> int:
+        related_votes = self.votes.all()
+        positive = related_votes.aggregate(total=models.Sum('is_positive'))['total']
+        total = len(related_votes)
+        return -total + positive * 2
+
+    @property
+    def answers_count(self) -> int:
+        return len(self.answers.all())
+
 
 class Answer(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name="answers")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     text = models.TextField()
     created_at = models.DateTimeField()
+
+    @property
+    def votes_count(self):
+        return len(self.votes.all())
+
 
 class Vote(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="votes")

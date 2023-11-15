@@ -3,12 +3,12 @@
 <div class="row mt-4">
     <div class="w-100 p-4 bg-primary c-rounded-10px">
         <span class="c-font-size-12">
-          {# <img src="{{ question.owner.avatar_url }}" alt="avatar" class="rounded"> #}
+          {# <img src="{{ question.owner.avatar }}" alt="avatar" class="rounded"> #}
           <img src="https://loremflickr.com/30/30" alt="avatar" class="rounded">
-          <span class="c-text-second fw-semibold ms-2">{{ question.owner.username }}</span>
+          <span class="c-text-second fw-semibold ms-2">{{ question.owner.user.username }}</span>
           <span class="c-text-muted">
             <span class="fw-bold ms-1">&middot;</span>
-            <span class="mt-n5 ms-1">{{ question.published_at }}</span>
+            <span class="mt-n5 ms-1">{{ question.created_at }}</span>
           </span>
         </span>
         <div>
@@ -21,18 +21,18 @@
             <div class="d-flex flex-row flex-wrap align-content-center mt-6">
                 <div class="rounded c-border pt-6px pb-6px pe-8px ps-8px">
                     <img src="{% static 'images/up.svg' %}">
-                    <span class="c-font-size-14 c-text-second fw-semibold ms-4">{{ question.votes }}</span>
+                    <span class="c-font-size-14 c-text-second fw-semibold ms-4">{{ question.votes_count }}</span>
                     <img src="{% static 'images/down.svg' %}" class="ms-4">
                 </div>
                 <span class="ms-6 c-font-size-14 fw-medium align-self-center">
                 {% if not not_show_answers %}
-                  <span>{{ question.answers }}</span>
+                  <span>{{ question.answers_count }}</span>
                   <a href="{% url 'app-question' question.id %}" class="text-secondary ms-3px">Answers</a>
                 {% endif %}
                 </span>
                 <div class="d-flex ms-lg-auto mt-lg-0 mt-2 align-self-center ms-n8px">
-                    {% for tag_name in question.tags %}
-                    <a class="c-tag ms-8px text-decoration-none" href="{% url 'app-feed-by-tag' tag_name %}">{{ tag_name }}</a>
+                    {% for tag in question.tags.all %}
+                    <a class="c-tag ms-8px text-decoration-none" href="{% url 'app-feed-by-tag' tag.name %}">{{ tag.name }}</a>
                     {% endfor %}
                 </div>
             </div>

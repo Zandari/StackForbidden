@@ -1,8 +1,8 @@
 <div class="row bg-primary pt-4 pb-4 c-rounded-10px">
   <span class="fw-semibold c-font-size-24 ms-4 p-0">Popular Tags</span>
   <div class="d-flex flex-wrap mt-12px ms-12px pe-4 p-0">
-    {% for tag_name in popular_tags %}
-      <a class="c-tag mt-8px ms-8px text-decoration-none" href="tag/{{ tag_name }}/">{{ tag_name }}</a>
+    {% for tag in popular_tags %}
+      <a class="c-tag mt-8px ms-8px text-decoration-none" href="{% url 'app-feed-by-tag' tag.name %}">{{ tag.name }}</a>
     {% endfor %}
   </div>
 </div>
