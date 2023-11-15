@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block title %}StackForbidden - New Question{% endblock %}
+
+{% block heading %}
+    <span class="c-font-size-36 fw-medium">New Question</span>
+{% endblock %}
+
+{% block content %}
+    <div class="row p-4 g-2 bg-primary c-rounded-10px mt-4 c-text-second">
+        <form>
+            <div class="col-auto">
+                <label for="titleInput" class="form-label me-2">Title</label>
+                <input type="text" id="titleInput" class="form-control">
+            </div>
+            <div class="col-auto mt-3">
+                <label for="textInput" class="form-label">Text</label>
+                <textarea id="textInput" class="form-control">
+                </textarea>
+            </div>
+            <div class="col-auto mt-3">
+                <label for="tagsInput" class="form-label me-2">Tags</label>
+                <input type="text" id="tagsInput" class="form-control">
+            </div>
+            <div class="col-3 mt-6">
+                <button type="submit" class="btn btn-secondary c-text-second w-100">Ask!</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

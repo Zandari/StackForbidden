@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row">
+    <div class="text-nowrap col-lg-2 col-12 offset-lg-1 mb-lg-0 mb-2 text-center c-font-size-24 c-font-montserrat">
+      <a href="{% url 'app-feed-new' %}" class="text-reset text-decoration-none">
+        <span class="fw-bold">Stack</span>Forbidden
+      </a>
+    </div>
+    <div class="col-lg-4 col-6 offset-lg-1">
+      <div class="input-group mt-2px">
+        <input type="search" class="form-control pt-4px pb-4px ps-2 c-text-muted bg-primary c-border c-font-size-14 rounded rounded-end-0 border-end-0" placeholder="How to... ?">
+        <button type="button" class="pt-3px pb-3px btn rounded rounded-start-0 c-border border-start-0"><i class="bi bi-search c-text-muted position-relative" style="top:-2px;"></i></button>
+      </div>
+    </div>
+    <div class="col-lg-1 col-3">
+      <a class="mt-2px btn w-100 rounded c-border pt-3px pb-3px ps-xl-4 pe-xl-4 text-secondary" href="{% url 'app-ask' %}">Ask!</a>
+    </div>
+      {% if user and user.is_authorized %}
+      <div class=" col-lg-1 col-3 offset-lg-1 text-center">
+          <img src="https://loremflickr.com/36/36" alt="avatar" class="rounded">
+          {# <img src="{{ user.avatar_url }}" alt="avatar" class="rounded"> #}
+      </div>
+      {% else %}
+        <div class="col-1 offset-lg-1 ms-lg-4 text-center">
+          <a type="button" class="mt-2px btn w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-login' %}">Log In</a>
+        </div>
+        <div class="col-1">
+          <a type="button" class="mt-2px btn btn-secondary w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-signup' %}">Sign Up</a>
+        </div>
+      {% endif %}
+  </div>
+</div>

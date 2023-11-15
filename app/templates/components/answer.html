@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="row mt-8">
+  <div class="p-4 bg-primary c-rounded-10px">
+    <span class="c-font-size-12">
+      <img src="https://loremflickr.com/30/30" alt="avatar" class="rounded">
+      <span class="c-text-second fw-semibold ms-2">{{ answer.owner.username }}</span>
+      <span class="c-text-muted">
+        <span class="fw-bold ms-1">&middot;</span>
+        <span class="mt-n5 ms-1">{{ answer.posted_at }}</span>
+      </span>
+    </span>
+    <div>
+      <p class="c-font-size-14 c-text-second mt-3">{{ answer.text }}</p>
+      <div class="d-flex flex-row flex-wrap align-content-center mt-6">
+        <div class="rounded c-border pt-6px pb-6px pe-8px ps-8px">
+          <img src="{% static 'images/up.svg' %}">
+          <span class="c-font-size-14 c-text-second fw-semibold ms-4">{{ answer.votes }}</span>
+          <img src="{% static 'images/up.svg' %}" class="ms-4">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

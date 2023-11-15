@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ question.title }}{% endblock %}
+
+{% block content %}
+    {% with not_show_answers=True %}
+    {% include "components/question.html" %}
+    {% endwith %}
+    {% for answer in page_obj %}
+        {% include "components/answer.html" %}
+    {% endfor %}
+
+    {% include "components/pagenav.html" %}
+
+    <div class="row mt-8">
+      <div class="p-4 bg-primary c-rounded-10px">
+        <p class="fw-semibold c-font-size-22">Share your idea!</p>
+        <textarea class="form-control" rows="" cols=""></textarea>
+        <button class="btn btn-secondary pt-3px pb-3px mt-3" type="submit" >Answer</button>
+      </div>
+    </div>
+
+{% endblock %}

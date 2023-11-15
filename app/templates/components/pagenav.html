@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="d-flex align-content-center mt-8 ms-n2">
+        {% for page_num in paginator.get_elided_page_range %}
+        {% if page_obj.number == request.GET.page %}
+        <a class="btn c-page-btn-selected ms-2">{{ page_num }}</a>
+        {% elif page_num == '.' %}
+        <span class="fw-bold c-text-second ms-2 align-self-center">...</span>
+        {% else %}
+        <a href="{{ request.path }}?page={{ page_num }}" class="btn c-page-btn-unselected ms-2">{{ page_num }}</a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>

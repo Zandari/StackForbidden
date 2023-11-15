@@ -1,0 +1,21 @@
+{# Filling base_pure template with components #}
+
+
+{% extends "base_pure.html" %}
+
+{# {% block title %}StackForbidden{% blockend %} #}
+
+
+{# --- Navbar #}
+
+{% block navbar %}
+  {% include "components/navbar.html" %}
+{% endblock %}
+
+
+{# --- Sidebar #}
+
+{% block sidebar %}
+  {% include "components/populartags.html" %}
+  {% include "components/bestmembers.html" %}
+{% endblock %}

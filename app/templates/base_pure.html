@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>{% block title %}{% endblock %}</title>
+  </head>  
+
+  <body>
+
+    <div class="container-fluid bg-primary pt-8px pb-8px">
+      {% block navbar %}
+      {% endblock %}
+    </div>
+  
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-7 offset-lg-1 mt-80px">
+            <div class="row">
+              {% block heading %}
+              {% endblock %}
+            </div>
+
+            {% block content %}
+            {% endblock %}
+          </div>
+            
+          <div class="col-lg-3 mt-lg-80px mt-8 ms-lg-4">
+            {% block sidebar %}
+            {% endblock %}
+          </div>
+
+        </div>
+
+    </div>
+  </body>
+</html>

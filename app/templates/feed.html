@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+
+{% block title %}StackForbidden - Feed{% endblock %}
+
+{% block heading %}
+  {% if not content_heading %}
+    <div>
+      <span class="c-font-size-36 fw-medium">New Questions</span>
+      <a class="ms-lg-3 text-nowrap c-font-size-14 fw-medium link-secondary" href="hot/">Hot Questions</a>
+    </div>
+  {% else %}
+    <span class="c-font-size-36 fw-medium">{{ content_heading }}</span>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% with truncate=True %}
+  {% for question in page_obj %}
+    {% include "components/question.html" %}
+  {% endfor %}
+  {% endwith %}
+
+  {% include "components/pagenav.html" %}
+{% endblock %}
