@@ -39,7 +39,7 @@ class Profile(models.Model):
 
     @property
     def answers_count(self) -> int:
-        return len(self.answers.all())
+        return self.answers.all().count()
 
 
 class Tag(models.Model):
@@ -66,7 +66,7 @@ class Question(models.Model):
 
     @property
     def answers_count(self) -> int:
-        return len(self.answers.all())
+        return self.answers.all().count()
 
 
 class Answer(models.Model):
@@ -78,7 +78,7 @@ class Answer(models.Model):
 
     @property
     def votes_count(self):
-        return len(self.answer_votes.all())
+        return self.answer_votes.all().count()
 
 
 class AnswerVote(models.Model):
