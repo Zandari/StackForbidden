@@ -1,0 +1,5 @@
+{% if alert %}
+<div class="alert alert-{{ alert.role.value }} alert-danger" role="alert">
+    {{ alert.text }}
+</div>
+{% endif %}

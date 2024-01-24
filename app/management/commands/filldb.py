@@ -21,52 +21,64 @@ class Command(BaseCommand):
         models.Tag.objects.all().delete()
         models.Question.objects.all().delete()
         models.Answer.objects.all().delete()
-        models.Vote.objects.all().delete()
+        models.AnswerVote.objects.all().delete()
+        models.QuestionVote.objects.all().delete()
 
         fake = faker.Faker()
-        profiles = list()
 
-        for _ in range(ratio):
-            u = models.User(username=fake.unique.user_name())
-            u.save()
-            p = models.Profile(user=u)
-            p.save()
-            profiles.append(p)
+        users = models.User.objects.bulk_create(
+            [models.User(username=fake.unique.user_name()) for _ in range(ratio)]
+        )
 
-        # TAGS = ["python", "django", "orm", "backend", "frontend",
-        #         "random", "vk", "helpme", "ruby", "c++"]
-        TAGS = [fake.word() for _ in range(ratio)]
+        profiles = models.Profile.objects.bulk_create(
+            [models.Profile(user=u) for u in users]
+        )
 
-        tags = list()
-        for tag in TAGS:
-            t = models.Tag(name=tag)
-            t.save()
-            tags.append(t)
+        tags = models.Tag.objects.bulk_create(
+            [models.Tag(name=t) for t in [fake.unique.word() for _ in range(ratio)]]
+        )
 
-        for _ in range(ratio * 10):
-            q = models.Question(owner=random.choice(profiles),
-                                title=fake.sentence(nb_words=15),
-                                text=fake.paragraph(nb_sentences=10),
-                                created_at=fake.date_time_between(tzinfo=timezone.utc))
-            random.shuffle(tags)
-            q.save()
-            for tag in tags[:random.randint(1, 5)]:
-                q.tags.add(tag)
-            for _ in range(10):
-                a = models.Answer(owner=random.choice(profiles),
-                                  question=q,
-                                  text=fake.paragraph(nb_sentences=3),
-                                  created_at=fake.date_time_between(start_date=q.created_at, tzinfo=timezone.utc))
-                a.save()
-                for _ in range(10):
-                    v = models.Vote(answer=a,
-                                    owner=random.choice(profiles),
-                                    is_positive=random.choice((True, False)),
-                                    created_at=fake.date_time_between(start_date=a.created_at, tzinfo=timezone.utc))
-                    v.save()
-            for _ in range(10):
-                v = models.Vote(question=q,
-                                owner=random.choice(profiles),
-                                is_positive=random.choice((True, False)),
-                                created_at=fake.date_time_between(start_date=q.created_at, tzinfo=timezone.utc))
-                v.save()
+        questions = models.Question.objects.bulk_create(
+            [models.Question(owner=random.choice(profiles),
+                             title=fake.sentence(nb_words=15),
+                             text=fake.paragraph(nb_sentences=10),
+                             created_at=fake.date_time_between(tzinfo=timezone.utc))
+             for _ in range(ratio * 10)]
+        )
+        random.shuffle(tags)
+        for question in questions:
+            [question.tags.add(tag) for tag in tags[:random.randint(1, 5)]]
+
+        for q in questions:
+            models.QuestionVote.objects.bulk_create(
+                [models.QuestionVote(question=q,
+                                     owner=random.choice(profiles),
+                                     is_positive=random.choice((True, False)),
+                                     created_at=fake.date_time_between(start_date=q.created_at, tzinfo=timezone.utc))
+                 for _ in range(10)]
+            )
+
+        for q in questions:
+            answers = models.Answer.objects.bulk_create(
+                [models.Answer(owner=random.choice(profiles),
+                               question=q,
+                               is_correct=random.choice((True, False)),
+                               text=fake.paragraph(nb_sentences=10),
+                               created_at=fake.date_time_between(start_date=q.created_at, tzinfo=timezone.utc))
+                 for _ in range(10)]
+            )
+            for a in answers:
+                models.AnswerVote.objects.bulk_create(
+                    [models.AnswerVote(answer=a,
+                                       owner=random.choice(profiles),
+                                       is_positive=random.choice((True, False)),
+                                       created_at=fake.date_time_between(start_date=a.created_at, tzinfo=timezone.utc))
+                    for _ in range(10)]
+                )
+                models.AnswerVote.objects.bulk_create(
+                    [models.AnswerVote(answer=a,
+                                         owner=random.choice(profiles),
+                                         is_positive=random.choice((True, False)),
+                                         created_at=fake.date_time_between(start_date=a.created_at, tzinfo=timezone.utc))
+                     for _ in range(10)]
+                )

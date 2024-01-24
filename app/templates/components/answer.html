@@ -9,6 +9,9 @@
         <span class="fw-bold ms-1">&middot;</span>
         <span class="mt-n5 ms-1">{{ answer.created_at }}</span>
       </span>
+      {% if answer.is_correct %}
+        <img src="{% static 'images/check.svg' %}" class="fill-secondary ms-4" style="width: 22px;">
+      {% endif %}
     </span>
     <div>
       <p class="c-font-size-14 c-text-second mt-3">{{ answer.text }}</p>

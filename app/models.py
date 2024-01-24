@@ -42,7 +42,6 @@ class Profile(models.Model):
         return len(self.answers.all())
 
 
-
 class Tag(models.Model):
     objects = TagManager()
 
@@ -60,9 +59,9 @@ class Question(models.Model):
 
     @property
     def votes_count(self) -> int:
-        related_votes = self.votes.all()
-        positive = related_votes.aggregate(total=models.Sum('is_positive'))['total']
-        total = len(related_votes)
+        related_votes = self.question_votes.all()
+        positive = related_votes.filter(is_positive=True).count()
+        total = related_votes.count()
         return -total + positive * 2
 
     @property
@@ -73,25 +72,24 @@ class Question(models.Model):
 class Answer(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
+    is_correct = models.BooleanField(default=False)
     text = models.TextField()
     created_at = models.DateTimeField()
 
     @property
     def votes_count(self):
-        return len(self.votes.all())
+        return len(self.answer_votes.all())
 
 
-class Vote(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="votes")
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="votes", null=True)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name="votes", null=True)
+class AnswerVote(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="answer_votes")
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name="answer_votes", null=True)
     is_positive = models.BooleanField(help_text="Describes is record upvote or downvote")
     created_at = models.DateTimeField()
 
-    def clean(self, *args, **kwargs):
-        if self.question is not None and self.answer is not None:
-            raise ValidationError("Only one of the fields should be filled")
-        elif self.question is None and self.answer is None:
-            raise ValidationError("One of the fields should be filled")
-        
-        return super().clean(*args, **kwargs)
+
+class QuestionVote(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="question_votes")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="question_votes", null=True)
+    is_positive = models.BooleanField(help_text="Describes is record upvote or downvote")
+    created_at = models.DateTimeField()

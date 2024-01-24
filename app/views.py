@@ -1,14 +1,33 @@
 from django.shortcuts import render
 from django.http import HttpRequest
-from django.core.paginator import Paginator, Page
-from typing import Optional, List, Any
+from django.core.paginator import Paginator, Page, InvalidPage
+from typing import Optional, List, Any, Tuple
+from dataclasses import dataclass
+from enum import Enum
 from . import models
 
 
-def _paginate(objects_list: List[Any], request: HttpRequest, per_page: int = 10) -> Page:
+class AlertRole(Enum):
+    DANGER = "danger"
+    WARNING = "warning"
+    INFO = "info"
+
+
+@dataclass
+class Alert:
+    text: str
+    role: AlertRole
+
+
+def _paginate(objects_list: List[Any], request: HttpRequest, per_page: int = 10) -> Tuple[Page, Paginator]:
     paginator = Paginator(objects_list, per_page)
+    paginator.ELLIPSIS = '.'
     page_number = request.GET.get('page')
-    return paginator.get_page(page_number)
+    try:
+        page = paginator.get_page(page_number)
+    except InvalidPage:
+        page = paginator.get_page(1)
+    return page, paginator
 
 
 def _get_base_context() -> dict:
@@ -25,11 +44,9 @@ def _question_feed(request: HttpRequest, data, heading: Optional[str] = None):
     context = _get_base_context()
     context["content_heading"] = heading
 
-    paginator = Paginator(data, 10)
-    paginator.ELLIPSIS = '.'
-    page_number = request.GET.get('page')
-    context["page_obj"] = paginator.get_page(page_number)
-    context["paginator"] = paginator    # used for navigation
+    page_info = _paginate(data, request)
+    context["page_obj"] = page_info[0]
+    context["paginator"] = page_info[1]
 
     return render(request, "feed.html", context)
 
@@ -48,6 +65,8 @@ def questions_feed_by_tag(request: HttpRequest, tag: str):
 
 def registration(request: HttpRequest):
     context = _get_base_context()
+    alert = Alert(role=AlertRole.DANGER, text="Lorem Ipsum =-)")
+    context["alert"] = alert
     return render(request, "signup.html", context)
 
 
@@ -61,15 +80,18 @@ def new_question(request: HttpRequest):
     return render(request, "ask.html", context)
 
 
+def profile_settings(request: HttpRequest):
+    context = _get_base_context()
+    return render(request, "settings.html", context)
+
+
 def answers(request: HttpRequest, id: int):
     context = _get_base_context()
     question = models.Question.objects.get(id=id)
     context["question"] = question
 
-    paginator = Paginator(question.answers.all(), 5)
-    paginator.ELLIPSIS = '.'
-    page_number = request.GET.get('page')
-    context["page_obj"] = paginator.get_page(page_number)
-    context["paginator"] = paginator    # used for navigation
+    page_info = _paginate(question.answers.all(), request)
+    context["page_obj"] = page_info[0]
+    context["paginator"] = page_info[1]
 
     return render(request, "question.html", context)
