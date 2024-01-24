@@ -22,7 +22,10 @@
       {% else %}
         {% if user.is_authenticated %}
           <div class="col-1 offset-lg-1 ms-lg-4 text-center">
-            <span>{{ user.username }}</span>
+            <span class="mt-2px w-100 pb-3px text-nowrap">{{ user.username }}</span>
+          </div>
+          <div class="col-1 offset-lg-1 ms-lg-4 text-center">
+            <a type="button" class="mt-2px btn btn-outline-secondary w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-logout' %}">Logout</a>
           </div>
         {% else %}
           <div class="col-1 offset-lg-1 ms-lg-4 text-center">

@@ -15,6 +15,7 @@ urlpatterns = [
     path("question/<int:id>/", views.answers, name='app-question'),
     path("tag/<str:tag>/", views.questions_feed_by_tag, name='app-feed-by-tag'),
     path("settings/", views.profile_settings, name='app-profile-settings'),
+    path("logout/", views.user_logout, name='app-logout'),
 ]
 
 if settings.DEBUG:

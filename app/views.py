@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
@@ -126,3 +126,8 @@ def answers(request: HttpRequest, id: int):
     context["paginator"] = page_info[1]
 
     return render(request, "question.html", context)
+
+
+def user_logout(request: HttpRequest):
+    logout(request)
+    return redirect("app-feed-new")

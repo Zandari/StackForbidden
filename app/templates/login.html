@@ -13,12 +13,10 @@
     {% include "components/alert.html" %}
 </div>
 <div class="row p-4 g-2 bg-primary c-rounded-10px mt-4 c-text-second">
-    <form>
-       <form method="POST">
-        {% csrf_token %}
-        {{ login_form|crispy }}
-        <button class="btn btn-secondary" type="submit">Login</button>
-      </form>
-    </form>
+   <form method="POST">
+    {% csrf_token %}
+    {{ login_form|crispy }}
+    <button class="btn btn-secondary" type="submit">Login</button>
+  </form>
 </div>
 {% endblock %}
