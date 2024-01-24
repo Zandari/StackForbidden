@@ -1,4 +1,8 @@
 from django.urls import path
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 from . import views
 
 
@@ -12,3 +16,7 @@ urlpatterns = [
     path("tag/<str:tag>/", views.questions_feed_by_tag, name='app-feed-by-tag'),
     path("settings/", views.profile_settings, name='app-profile-settings'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

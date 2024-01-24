@@ -2,25 +2,23 @@
 
 
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block heading %}
-  <span class="c-font-size-36 fw-medium">Authorization</span>
+<span class="c-font-size-36 fw-medium">Authorization</span>
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    {% include "components/alert.html" %}
+</div>
 <div class="row p-4 g-2 bg-primary c-rounded-10px mt-4 c-text-second">
-  <form>
-    <div class="col-auto">
-      <label for="usernameInput" class="form-label me-2">Login</label>
-      <input type="text" id="usernameInput" class="form-control">
-    </div>
-    <div class="col-auto mt-3">
-      <label for="passwordInput" class="form-label">Password</label>
-      <input type="password" id="passwordInput" class="form-control">
-    </div>
-    <div class="col-3 mt-6">
-      <button type="submit" class="btn btn-secondary c-text-second w-100">Authorize</button>
-    </div>
-  </form>
+    <form>
+       <form method="POST">
+        {% csrf_token %}
+        {{ login_form|crispy }}
+        <button class="btn btn-secondary" type="submit">Login</button>
+      </form>
+    </form>
 </div>
 {% endblock %}

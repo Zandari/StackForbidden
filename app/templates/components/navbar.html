@@ -20,12 +20,18 @@
           {# <img src="{{ user.avatar_url }}" alt="avatar" class="rounded"> #}
       </div>
       {% else %}
-        <div class="col-1 offset-lg-1 ms-lg-4 text-center">
-          <a type="button" class="mt-2px btn w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-login' %}">Log In</a>
-        </div>
-        <div class="col-1">
-          <a type="button" class="mt-2px btn btn-secondary w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-signup' %}">Sign Up</a>
-        </div>
+        {% if user.is_authenticated %}
+          <div class="col-1 offset-lg-1 ms-lg-4 text-center">
+            <span>{{ user.username }}</span>
+          </div>
+        {% else %}
+          <div class="col-1 offset-lg-1 ms-lg-4 text-center">
+            <a type="button" class="mt-2px btn w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-login' %}">Log In</a>
+          </div>
+          <div class="col-1">
+            <a type="button" class="mt-2px btn btn-secondary w-100 pt-3px pb-3px text-nowrap" href="{% url 'app-signup' %}">Sign Up</a>
+          </div>
+        {% endif %}
       {% endif %}
   </div>
 </div>

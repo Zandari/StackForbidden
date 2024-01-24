@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.core.paginator import Paginator, Page, InvalidPage
 from typing import Optional, List, Any, Tuple
 from dataclasses import dataclass
 from enum import Enum
 from . import models
+from .forms import NewUserForm
 
 
 class AlertRole(Enum):
@@ -65,13 +69,40 @@ def questions_feed_by_tag(request: HttpRequest, tag: str):
 
 def registration(request: HttpRequest):
     context = _get_base_context()
-    alert = Alert(role=AlertRole.DANGER, text="Lorem Ipsum =-)")
-    context["alert"] = alert
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            context["alert"] = Alert("Success", role=AlertRole.INFO)
+            return redirect("app-feed-new")
+        context["alert"] = Alert(form.errors, role=AlertRole.DANGER)
+    form = NewUserForm()
+    context["form"] = form
     return render(request, "signup.html", context)
 
 
 def authorization(request: HttpRequest):
     context = _get_base_context()
+
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                context["alert"] = Alert("Success", AlertRole.INFO)
+                return redirect("app-feed-new")
+            else:
+                context["alert"] = Alert("Invalid username or password.", AlertRole.DANGER)
+        else:
+            context["alert"] = Alert("Invalid username or password.", AlertRole.DANGER)
+    form = AuthenticationForm()
+    context["login_form"] = form
     return render(request, "login.html", context)
 
 
